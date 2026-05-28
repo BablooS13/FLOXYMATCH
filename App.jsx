@@ -88,18 +88,15 @@ headers: {
       date_asc: '1',
     })
 
-    const url = `${BASE_URL}?${params.toString()}`
-    const json = await fetchWithRetry(url, options)
+console.log(json)
 
-    if (!json?.data?.list) {
-      throw new Error(`data.list not found. Full response: ${JSON.stringify(json)}`)
-    }
+const list = json?.data?.list || json?.list || []
 
-    total = json.data.total || 0
-    const list = json.data.list
-    allList = allList.concat(list)
+if (!Array.isArray(list)) {
+  throw new Error(`Invalid API response: ${JSON.stringify(json)}`)
+}
 
-    if (allList.length >= total || list.length === 0) {
+total = json?.data?.total || json?.total || list.length {
       break
     }
 
