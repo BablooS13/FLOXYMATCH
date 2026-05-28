@@ -77,31 +77,38 @@ headers: {
   let total = 0
   let allList = []
 
-  while (true) {
-    const params = new URLSearchParams({
-      page: String(page),
-      limit: String(REQUEST_LIMIT),
-      if_asc: 'false',
-      min_amount: '5000',
-      max_amount: '100000',
-      method: '1',
-      date_asc: '1',
-    })
+while (true) {
+  const params = new URLSearchParams({
+    page: String(page),
+    limit: String(REQUEST_LIMIT),
+    if_asc: 'false',
+    min_amount: '5000',
+    max_amount: '100000',
+    method: '1',
+    date_asc: '0',
+  })
 
-console.log(json)
+  const url = `${BASE_URL}?${params.toString()}`
+  const json = await fetchWithRetry(url, options)
 
-const list = json?.data?.list || json?.list || []
+  console.log(json)
 
-if (!Array.isArray(list)) {
-  throw new Error(`Invalid API response: ${JSON.stringify(json)}`)
-}
+  const list = json?.data?.list || json?.list || []
 
-total = json?.data?.total || json?.total || list.length {
-      break
-    }
-
-    page += 1
+  if (!Array.isArray(list)) {
+    throw new Error(`Invalid API response: ${JSON.stringify(json)}`)
   }
+
+  total = json?.data?.total || json?.total || list.length
+
+  allList = allList.concat(list)
+
+  if (allList.length >= total || list.length === 0) {
+    break
+  }
+
+  page += 1
+}
 
   return { total, allList }
 }
