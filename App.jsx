@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import * as XLSX from 'xlsx'
 import accountsFileUrl from './assets/accounts.xlsx?url'
 
-const BASE_URL = 'https://invite.dawey.top/xxapi/buyitoken/waitpayerpaymentslip'
+const BASE_URL = 'https://api.plavix.skin/xxapi/buyitoken/waitpayerpaymentslip'
 const REQUEST_LIMIT = 200
 const TOKEN_STORAGE_KEY = 'floxpay-indiatoken'
 const OUTPUT_HEADERS = [
@@ -80,7 +80,7 @@ headers: {
 while (true) {
   const params = new URLSearchParams({
     page: String(page),
-    limit: String(REQUEST_LIMIT),
+    limit: '50',
     if_asc: 'false',
     min_amount: '5000',
     max_amount: '100000',
@@ -93,13 +93,13 @@ while (true) {
 
   console.log(json)
 
-  const list = json?.data?.list || json?.list || []
+  const list = json?.data?.list || []
 
   if (!Array.isArray(list)) {
     throw new Error(`Invalid API response: ${JSON.stringify(json)}`)
   }
 
-  total = json?.data?.total || json?.total || list.length
+  total = json?.data?.total || list.length
 
   allList = allList.concat(list)
 
